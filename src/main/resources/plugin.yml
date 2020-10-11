@@ -1,0 +1,4 @@
+name: ExchangeEXPbottle
+version: ${project.version}
+main: mametaku.exchangeexpbottle.ExchangeEXPbottle
+api-version: 1.16
