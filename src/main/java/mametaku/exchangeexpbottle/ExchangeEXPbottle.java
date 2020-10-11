@@ -1,27 +1,26 @@
 package mametaku.exchangeexpbottle;
 
 import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Random;
-
-import static java.lang.Integer.parseInt;
 
 public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        getLogger().info("automendingmachine is run.");
+        getLogger().info("ExchangeEXPBottle is run.");
         getServer().getPluginManager().registerEvents(this, this);
         // config.ymlが存在しない場合はファイルに出力します。
         saveDefaultConfig();
@@ -29,7 +28,7 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
         FileConfiguration config = getConfig();
         reloadConfig();
         if (!config.getBoolean("mode")) {
-            getLogger().info("automendingmachine is not run.");
+            getLogger().info("ExchangeEXPBottle is not run.");
         }
     }
 
@@ -38,8 +37,15 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
+
+
     @EventHandler
     public void event(PlayerInteractEvent e) {
+        FileConfiguration config = getConfig();
+        if (!config.getBoolean("mode")) {
+            return;
+        }
+
         Random random = new Random();
 
         Player p = e.getPlayer();
@@ -50,33 +56,32 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
 
         ItemStack items = new ItemStack(Material.EXPERIENCE_BOTTLE);
 
-
         if(!p.isSneaking()) return;
-        p.sendMessage("動く");
 
-        if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))  return;
-        p.sendMessage("動く1");
+        if (!p.hasPermission("eeb.use")) {
+            p.sendMessage("§3§l[§a§lEEB§3§l]§f§lあなたはまだその機能を使えません！");
+            return;
+        }
+
+        if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK))  return;
         if(item.getType() == Material.GLASS_BOTTLE) {
-            p.sendMessage("動く2");
             while (item.getAmount() != 0){
+                int Expamount = ExpManager.getTotalExperience(p);
                 int ia = p.getInventory().getItemInOffHand().getAmount();
-                int Expamount = p.getTotalExperience();
-                p.sendMessage(Expamount+"");
                 int empty = p.getInventory().firstEmpty();
                 if (empty == -1){
-                    p.sendMessage("インベントリに空きがありません！");
+                    p.sendMessage("§3§l[§a§lEEB§3§l]§f§lインベントリに空きがありません！");
                     break;
                 }
                 if (p.getLevel() == 0){
-                    p.sendMessage("レベルが足りません！");
+                    p.sendMessage("§3§l[§a§lEEB§3§l]§f§lレベルが足りません！");
                     break;
                 }
                 ia--;
-                Expamount -= 3+(random.nextInt(7));
+                Expamount -= 3+(random.nextInt(8));
                 item.setAmount(ia);
-                p.setTotalExperience(Expamount);
+                ExpManager.setTotalExperience(p,Expamount);
                 p.getInventory().addItem(items);
-                p.sendMessage("動く3");
             }
         }
     }
