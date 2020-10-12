@@ -9,9 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.PluginAwareness;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,10 +44,14 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
 
     @EventHandler
     public void event(PlayerInteractEvent e) {
+
+        if(e.getHand() == EquipmentSlot.HAND) return;
+
         FileConfiguration config = getConfig();
         if (!config.getBoolean("mode")) {
             return;
         }
+
 
         Random random = new Random();
 
