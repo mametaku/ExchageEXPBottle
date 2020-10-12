@@ -78,7 +78,11 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
                     break;
                 }
                 ia--;
-                Expamount -= 3+(random.nextInt(8));
+                Expamount -= 5+(random.nextInt(8));
+                if (Math.signum(Expamount) == -1.0){
+                    p.sendMessage("§3§l[§a§lEEB§3§l]§f§lレベルが足りません！");
+                    break;
+                }
                 item.setAmount(ia);
                 ExpManager.setTotalExperience(p,Expamount);
                 p.getInventory().addItem(items);
