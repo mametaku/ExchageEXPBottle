@@ -23,6 +23,27 @@ import java.util.UUID;
 public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
 
     @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            return true;
+        }
+        Player p = (Player) sender;
+        if (!p.hasPermission("eeb.use")) {
+            p.sendMessage("Unknown command. Type \"/help\" for help.");
+            return true;
+        }
+        if (args.length == 0) {
+            p.sendMessage("§b§l ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            p.sendMessage("§b§l                   [ExchageEXPBottle]                   ");
+            p.sendMessage("§b§l              左手にガラス瓶を持って左クリック！");
+            p.sendMessage("§b§l            レベルを消費して経験値瓶を作りだします。");
+            p.sendMessage("§b§l ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onEnable() {
         getLogger().info("ExchangeEXPBottle is run.");
         getServer().getPluginManager().registerEvents(this, this);
@@ -31,6 +52,7 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
         // config.ymlを読み込みます。
         FileConfiguration config = getConfig();
         reloadConfig();
+        getCommand("eeb").setExecutor(this);
         if (!config.getBoolean("mode")) {
             getLogger().info("ExchangeEXPBottle is not run.");
         }
@@ -69,13 +91,12 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
 
         if(!p.isSneaking()) return;
 
-        if (!p.hasPermission("eeb.use")) {
-            p.sendMessage("§3§l[§a§lEEB§3§l]§f§lあなたはまだその機能を使えません！");
-            return;
-        }
-
         if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK))  return;
         if(item.getType() == Material.GLASS_BOTTLE) {
+            if (!p.hasPermission("eeb.use")) {
+                p.sendMessage("§3§l[§a§lEEB§3§l]§f§lあなたはまだその機能を使えません！");
+                return;
+            }
             while (item.getAmount() != 0){
                 int Expamount = ExpManager.getTotalExperience(p);
                 int ia = p.getInventory().getItemInOffHand().getAmount();
