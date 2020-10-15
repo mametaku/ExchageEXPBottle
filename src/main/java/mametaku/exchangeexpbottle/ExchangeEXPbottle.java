@@ -35,8 +35,8 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
         if (args.length == 0) {
             p.sendMessage("§a§l ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
             p.sendMessage("§a§l                   [ExchageEXPBottle]                   ");
-            p.sendMessage("§a§l              左手にガラス瓶を持って左クリック！");
-            p.sendMessage("§a§l            レベルを消費して経験値瓶を作りだします。");
+            p.sendMessage("§a§l             左手にガラス瓶を持って右クリック！               ");
+            p.sendMessage("§a§l           レベルを消費して経験値瓶を作りだします。             ");
             p.sendMessage("§a§l ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
             return true;
         }
