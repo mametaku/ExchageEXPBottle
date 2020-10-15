@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
 
@@ -52,10 +53,13 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
             return;
         }
 
+        VaultManager v = new VaultManager(this);
 
         Random random = new Random();
 
         Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        double pay = 0;
 
         Action action = e.getAction();
 
@@ -76,6 +80,8 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
                 int Expamount = ExpManager.getTotalExperience(p);
                 int ia = p.getInventory().getItemInOffHand().getAmount();
                 int empty = p.getInventory().firstEmpty();
+                double money = config.getDouble("tax");
+                double pm = v.getBalance(uuid);
                 if (empty == -1){
                     p.sendMessage("§3§l[§a§lEEB§3§l]§f§lインベントリに空きがありません！");
                     break;
@@ -84,16 +90,27 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
                     p.sendMessage("§3§l[§a§lEEB§3§l]§f§lレベルが足りません！");
                     break;
                 }
+                if (pm < money){
+                    p.sendMessage("§3§l[§a§lEEB§3§l]§f§lお金が足りません！");
+                    break;
+                }
+                v.withdraw(uuid,money);
                 ia--;
                 Expamount -= 5+(random.nextInt(8));
                 if (Math.signum(Expamount) == -1.0){
                     p.sendMessage("§3§l[§a§lEEB§3§l]§f§lレベルが足りません！");
                     break;
                 }
+                pay += money;
                 item.setAmount(ia);
                 ExpManager.setTotalExperience(p,Expamount);
                 p.getInventory().addItem(items);
             }
+            if (pay == 0){
+                return;
+            }
+            p.sendMessage(pay+"$支払いました");
+            return;
         }
     }
 }
