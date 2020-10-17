@@ -126,7 +126,7 @@ public final class ExchangeEXPbottle extends JavaPlugin implements Listener {
             if (pay == 0){
                 return;
             }
-            p.sendMessage(pay+"$支払いました");
+            p.sendMessage("§3§l[§a§lEEB§3§l]§f§l"+pay+"$支払いました");
             return;
         }
     }
