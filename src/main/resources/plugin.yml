@@ -2,6 +2,8 @@ name: ExchangeEXPbottle
 version: ${project.version}
 main: mametaku.exchangeexpbottle.ExchangeEXPbottle
 api-version: 1.16
+softdepend:
+  - Vault
 commands:
   eeb:
     description: help
